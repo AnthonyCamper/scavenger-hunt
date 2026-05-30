@@ -52,47 +52,46 @@ window.HUNT_CONFIG = {
   clues: [
     {
       id: "clue_01",
-      emoji: "⚓",
-      title: "Zero Hour",
-      clue: "Every expedition needs a departure point. Somewhere on the southern shore there's a concrete ramp — a little rough, a little muddy — where boats have been sliding into this lake for decades. It has a name, and that name is a hint. Find the landing.",
-      // Pleasants Landing boat launch — southern end of lake
-      // Source: pleasantslanding.com + fishing.org — HIGH confidence
-      lat: 38.0073,
-      lng: -77.7147,
-      radius: 40,
+      emoji: "💀",
+      title: "What Remains",
+      clue: "Somewhere near the southern end of this lake there's an island with a name that raises questions. They didn't name it after the view, or a family, or a feeling. They named it for what's left when everything else is stripped away. What is that — and where is it?",
+      // Bones Island — southern Lake Anna, Louisa County
+      // Source: anna.uslakes.info/POI/Islands/Bones-Island/950725/ — HIGH confidence
+      lat: 38.00042,
+      lng: -77.73166,
+      radius: 45,
     },
     {
       id: "clue_02",
-      emoji: "🌊",
-      title: "The Edge of the World",
-      clue: "Point your bow south and keep going until you physically can't anymore. At the very bottom of this lake, a massive earthen wall holds back every single drop of water you've been floating on all day. Without it, none of this exists. Navigate to the end of the lake — to the thing that made it.",
-      // Lake Anna Dam (North Anna Dam) — southern terminus of the lake
-      // Source: Wikipedia + damsoftheworld.com — HIGH confidence
-      lat: 38.0127,
-      lng: -77.7134,
+      emoji: "🗺️",
+      title: "Read the Name",
+      clue: "The next island doesn't hide behind a family name or a pretty word. It described itself, plainly and accurately, in exactly two words. The name is the location. The location is the name. Find the island that just told you where it is.",
+      // River Bend Island — mid-southern Lake Anna, Spotsylvania County
+      // Source: anna.uslakes.info/POI/Islands/River-Bend-Island/951209/ — HIGH confidence
+      lat: 38.03458,
+      lng: -77.73749,
       radius: 45,
     },
     {
       id: "clue_03",
-      emoji: "🌉",
-      title: "Under the Road",
-      clue: "Somewhere in the middle of this lake, a highway crosses right over the water. Cars drive it every day without a second thought — totally unaware there's a lake underneath them. You're going to find that bridge and check in from the water side. Come at it from below. That's the move.",
-      // Route 208 causeway bridge — mid-lake crossing
-      // ⚠️  VERIFY BEFORE EVENT: open Google Maps, search "New Bridge Road Mineral VA",
-      // drop a pin on the bridge deck over water, and replace these coords.
-      lat: 38.0750,
-      lng: -77.8000,
-      radius: 50,
+      emoji: "🎭",
+      title: "Center Stage",
+      clue: "There is an island on this lake that named itself after the act of performing for an audience. It is not modest. It is not subtle. It is, in fact, the opposite of hiding. Find the island that has always assumed it was being watched.",
+      // Showman Island — mid Lake Anna, Louisa County
+      // Source: anna.uslakes.info/POI/Islands/Showman-Island/950157/ — HIGH confidence
+      lat: 38.03514,
+      lng: -77.79972,
+      radius: 45,
     },
     {
       id: "clue_04",
-      emoji: "🏖️",
-      title: "Shore Leave",
-      clue: "The western shore has been hiding a sandy beach this whole time — tucked inside a state park, open to anyone who shows up. Bring the boat in close enough that your GPS puts you on the sand. That's your final check-in. You're done. Now go find a drink.",
-      // Lake Anna State Park swimming beach — western shore
-      // Source: Wikipedia (38°7'6.96\"N, 77°49'12\"W) + TopoZone — HIGH confidence
-      lat: 38.1154,
-      lng: -77.8233,
+      emoji: "🌉",
+      title: "A Day Worth Hollering About",
+      clue: "Head north — farther north than any stop so far. Your final target is one of eight named bridges on this lake, and its name is hiding a celebration in plain sight. Split it in two: the sound you make when something's great, and the unit of time it happens on. Get your boat underneath it. Hunt over.",
+      // Holladay Bridge — northern Lake Anna, Louisa County
+      // Source: anna.uslakes.info/POI/Bridges/Holladay-Bridge/950328/ — HIGH confidence
+      lat: 38.11069,
+      lng: -77.88555,
       radius: 50,
     },
   ],
