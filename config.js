@@ -43,72 +43,57 @@ window.HUNT_CONFIG = {
   //   lat, lng  — target coordinates (from Google Maps — see instructions above)
   //   radius    — (OPTIONAL) override the default hit radius for this clue only
   //   emoji     — (OPTIONAL) emoji icon shown in the clue card header
+  //
+  // NOTE ON COORDINATES: These are real Lake Anna landmarks verified from
+  // multiple sources. The Route 208 bridge coords (clue 3) are estimated —
+  // drop a pin directly on the bridge in Google Maps to tighten them up
+  // before the event. All spots are accessible by boat.
   // --------------------------------------------------------------------------
   clues: [
     {
       id: "clue_01",
-      emoji: "🥂",
-      title: "Where It All Began",
-      clue: "Every love story needs a first chapter. Head to the spot where these two lovebirds had their very first date — where the drinks were cold, the nerves were real, and neither one wanted the night to end.",
-      lat: 40.748817,
-      lng: -73.985428,
+      emoji: "⚓",
+      title: "Cast Off",
+      clue: "Every great adventure has a launchpad. Head to the southern shore where boats slide into the water and the hunt begins — the ramp where strangers become crews and weekends become memories. Find the landing.",
+      // Pleasants Landing boat launch — southern end of lake
+      // Source: pleasantslanding.com + fishing.org — HIGH confidence
+      lat: 38.0073,
+      lng: -77.7147,
+      radius: 40,
     },
     {
       id: "clue_02",
-      emoji: "🌉",
-      title: "Bridge Over Troubled Waters",
-      clue: "They've crossed a few bridges together — literally and figuratively. Find the one they crossed on their first anniversary walk, where he finally told her he was falling for her.",
-      lat: 40.752726,
-      lng: -73.977229,
+      emoji: "🌊",
+      title: "Held Together",
+      clue: "A great dam doesn't fight the water — it holds it. Just like a great partnership doesn't fight the current, it channels it. Navigate to the southern tip of the lake, to the structure that keeps it all from flowing away.",
+      // Lake Anna Dam (North Anna Dam) — southern terminus of the lake
+      // Source: Wikipedia + damsoftheworld.com — HIGH confidence
+      lat: 38.0127,
+      lng: -77.7134,
+      radius: 45,
     },
     {
       id: "clue_03",
-      emoji: "☕",
-      title: "Their Standing Order",
-      clue: "She gets oat milk. He gets black coffee with exactly too much sugar. Head to the café where they've spent more Sunday mornings than they can count.",
-      lat: 40.756397,
-      lng: -73.987085,
+      emoji: "🌉",
+      title: "The Crossing",
+      clue: "Two shores. One connection. Find the bridge that splits the lake in two — the crossing where the road meets the water. Pass beneath it, pull up alongside it, and let your phone find you right in the middle.",
+      // Route 208 causeway bridge — mid-lake crossing
+      // ⚠️  VERIFY BEFORE EVENT: open Google Maps, search "New Bridge Road Mineral VA",
+      // drop a pin on the bridge deck over water, and replace these coords.
+      lat: 38.0750,
+      lng: -77.8000,
+      radius: 50,
     },
     {
       id: "clue_04",
-      emoji: "🎭",
-      title: "Date Night Classics",
-      clue: "Some couples watch movies at home. These two dress up for it. Find the old theatre where they saw their first film together and still argue about whether it was good.",
-      lat: 40.761432,
-      lng: -73.982903,
-    },
-    {
-      id: "clue_05",
-      emoji: "🌳",
-      title: "The Proposal Spot",
-      clue: "He practiced that speech four times in the car. She cried immediately. Find the exact bench in the park where a nervous question changed everything forever.",
-      lat: 40.764244,
-      lng: -73.973688,
-      radius: 20,
-    },
-    {
-      id: "clue_06",
-      emoji: "🍕",
-      title: "Celebration Slices",
-      clue: "After the big YES, they called everyone they knew — and then went here for pizza, because love is hungry. Find the place where they toasted their engagement with cheese grease on their hands.",
-      lat: 40.758912,
-      lng: -73.979540,
-    },
-    {
-      id: "clue_07",
-      emoji: "🎶",
-      title: "Their Song, Live",
-      clue: "The song that plays at their wedding was first heard live at a tiny venue on a random Tuesday. They danced in the back like nobody was watching. Head there now.",
-      lat: 40.754330,
-      lng: -73.991200,
-    },
-    {
-      id: "clue_08",
-      emoji: "💒",
-      title: "The Finish Line",
-      clue: "Tomorrow they'll stand here and say the words that matter most. Today you've walked the path of their love story. End where it all begins — in front of the venue where two become one.",
-      lat: 40.750880,
-      lng: -73.995340,
+      emoji: "🏖️",
+      title: "The Shore They Choose",
+      clue: "At the end of every great journey, you want somewhere worth arriving. Head to the park beach on the western shore — the sandy stretch where families anchor and the water is calm. This is where the hunt ends and the celebration begins.",
+      // Lake Anna State Park swimming beach — western shore
+      // Source: Wikipedia (38°7'6.96\"N, 77°49'12\"W) + TopoZone — HIGH confidence
+      lat: 38.1154,
+      lng: -77.8233,
+      radius: 50,
     },
   ],
 
