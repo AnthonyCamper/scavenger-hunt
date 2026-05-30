@@ -53,8 +53,8 @@ window.HUNT_CONFIG = {
     {
       id: "clue_01",
       emoji: "⚓",
-      title: "Cast Off",
-      clue: "Every great adventure has a launchpad. Head to the southern shore where boats slide into the water and the hunt begins — the ramp where strangers become crews and weekends become memories. Find the landing.",
+      title: "Zero Hour",
+      clue: "Every expedition needs a departure point. Somewhere on the southern shore there's a concrete ramp — a little rough, a little muddy — where boats have been sliding into this lake for decades. It has a name, and that name is a hint. Find the landing.",
       // Pleasants Landing boat launch — southern end of lake
       // Source: pleasantslanding.com + fishing.org — HIGH confidence
       lat: 38.0073,
@@ -64,8 +64,8 @@ window.HUNT_CONFIG = {
     {
       id: "clue_02",
       emoji: "🌊",
-      title: "Held Together",
-      clue: "A great dam doesn't fight the water — it holds it. Just like a great partnership doesn't fight the current, it channels it. Navigate to the southern tip of the lake, to the structure that keeps it all from flowing away.",
+      title: "The Edge of the World",
+      clue: "Point your bow south and keep going until you physically can't anymore. At the very bottom of this lake, a massive earthen wall holds back every single drop of water you've been floating on all day. Without it, none of this exists. Navigate to the end of the lake — to the thing that made it.",
       // Lake Anna Dam (North Anna Dam) — southern terminus of the lake
       // Source: Wikipedia + damsoftheworld.com — HIGH confidence
       lat: 38.0127,
@@ -75,8 +75,8 @@ window.HUNT_CONFIG = {
     {
       id: "clue_03",
       emoji: "🌉",
-      title: "The Crossing",
-      clue: "Two shores. One connection. Find the bridge that splits the lake in two — the crossing where the road meets the water. Pass beneath it, pull up alongside it, and let your phone find you right in the middle.",
+      title: "Under the Road",
+      clue: "Somewhere in the middle of this lake, a highway crosses right over the water. Cars drive it every day without a second thought — totally unaware there's a lake underneath them. You're going to find that bridge and check in from the water side. Come at it from below. That's the move.",
       // Route 208 causeway bridge — mid-lake crossing
       // ⚠️  VERIFY BEFORE EVENT: open Google Maps, search "New Bridge Road Mineral VA",
       // drop a pin on the bridge deck over water, and replace these coords.
@@ -87,8 +87,8 @@ window.HUNT_CONFIG = {
     {
       id: "clue_04",
       emoji: "🏖️",
-      title: "The Shore They Choose",
-      clue: "At the end of every great journey, you want somewhere worth arriving. Head to the park beach on the western shore — the sandy stretch where families anchor and the water is calm. This is where the hunt ends and the celebration begins.",
+      title: "Shore Leave",
+      clue: "The western shore has been hiding a sandy beach this whole time — tucked inside a state park, open to anyone who shows up. Bring the boat in close enough that your GPS puts you on the sand. That's your final check-in. You're done. Now go find a drink.",
       // Lake Anna State Park swimming beach — western shore
       // Source: Wikipedia (38°7'6.96\"N, 77°49'12\"W) + TopoZone — HIGH confidence
       lat: 38.1154,
