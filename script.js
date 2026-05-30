@@ -267,7 +267,7 @@
     $("progress-bar-fill").style.width = `${((clueIndex + 1) / total) * 100}%`;
 
     // Show hit overlay
-    $("hit-icon").textContent = team === "girls" ? "💖" : "🎯";
+    $("hit-icon").textContent = team === "girls" ? "✦" : "🎯";
     $("hit-title").textContent = th.hitMessage;
     $("hit-subtitle").textContent = th.hitSubtitle;
     $("next-btn").textContent = th.nextButton;
@@ -332,21 +332,21 @@
     if (typeof confetti !== "function") return;
 
     if (team === "girls") {
-      // Hearts and petals in pink/rose tones
-      const heartEmoji = "💗";
+      // Blush, rose gold, cream — gentle drift, not a burst
       const defaults = {
-        particleCount: 60,
-        spread: 80,
-        startVelocity: 35,
-        ticks: 200,
-        colors: ["#e8749a", "#f7b4cc", "#ffffff", "#c9a0b8", "#f9d4e2"],
+        particleCount: 35,
+        spread: 65,
+        startVelocity: 22,
+        ticks: 320,
+        colors: ["#e8d4c8", "#b8967e", "#ffffff", "#d4b09a", "#c8b8b0"],
         shapes: ["circle"],
-        gravity: 0.7,
-        scalar: 1.1,
+        gravity: 0.45,
+        scalar: 0.9,
+        drift: 0.3,
       };
-      confetti({ ...defaults, origin: { x: 0.3, y: 0.5 } });
-      setTimeout(() => confetti({ ...defaults, origin: { x: 0.7, y: 0.4 } }), 180);
-      setTimeout(() => confetti({ ...defaults, particleCount: 30, origin: { x: 0.5, y: 0.6 } }), 360);
+      confetti({ ...defaults, origin: { x: 0.35, y: 0.5 } });
+      setTimeout(() => confetti({ ...defaults, origin: { x: 0.65, y: 0.45 } }), 300);
+      setTimeout(() => confetti({ ...defaults, particleCount: 20, origin: { x: 0.5, y: 0.52 } }), 600);
     } else {
       // Bold gold + white burst
       const defaults = {
@@ -369,13 +369,13 @@
     if (t !== "girls") return;
     // Floating petals / hearts for girls theme
     const containers = ["ambient-bg", "ambient-bg-hunt", "ambient-bg-finale"];
-    const symbols = ["🌸", "💕", "✨", "🌷", "💗", "🌺"];
+    const symbols = ["✦", "·", "✧", "◦", "✦", "·"];
 
     containers.forEach((cid) => {
       const el = $(cid);
       if (!el) return;
       el.innerHTML = "";
-      for (let i = 0; i < 14; i++) {
+      for (let i = 0; i < 10; i++) {
         const petal = document.createElement("span");
         petal.className = "petal";
         petal.textContent = symbols[Math.floor(Math.random() * symbols.length)];

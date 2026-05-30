@@ -254,184 +254,222 @@ html, body {
    💐 GIRLS THEME
    ============================================================ */
 .theme-girls {
-  --accent: #e8749a;
-  --accent2: #c9a0b8;
-  --bg: #fdf6f9;
-  --card-bg: #fff;
-  --card-border: rgba(232,116,154,0.2);
-  --text: #3a2535;
-  --text-muted: #9b7e8e;
-  --btn-primary-bg: var(--accent);
-  --btn-primary-text: #fff;
-  background: linear-gradient(160deg, #fdf6f9 0%, #f7eef6 50%, #fde8ef 100%);
+  --accent: #b8967e;
+  --accent-soft: #e8d4c8;
+  --bg: #faf6f2;
+  --card-bg: #ffffff;
+  --card-border: rgba(184, 150, 126, 0.22);
+  --text: #3a2a2a;
+  --text-muted: #9a8a80;
+  background: linear-gradient(160deg, #faf6f2 0%, #f5ede6 60%, #f0e8e0 100%);
   color: var(--text);
 }
 
 .theme-girls .login-bg-overlay {
-  background: linear-gradient(160deg, #fdf6f9 0%, #f7eef6 50%, #fde8ef 100%);
+  background: linear-gradient(160deg, #faf6f2 0%, #f5ede6 60%, #f0e8e0 100%);
 }
 
 .theme-girls .login-card {
-  border: 1px solid var(--card-border);
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 8px 40px rgba(232,116,154,0.12), 0 2px 8px rgba(180,100,140,0.08);
+  border: 1px solid rgba(184, 150, 126, 0.28);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 32px rgba(184, 150, 126, 0.1), 0 1px 4px rgba(120, 80, 60, 0.06);
+}
+
+/* Thin accent line at top of login card */
+.theme-girls .login-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 15%; right: 15%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b8967e, transparent);
 }
 
 .theme-girls .login-title {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
-  font-size: clamp(1.6rem, 7vw, 2.5rem);
-  color: var(--accent);
+  font-style: italic;
+  font-size: clamp(1.5rem, 6vw, 2.1rem);
+  color: var(--text);
   letter-spacing: 0.01em;
+}
+
+/* Typographic divider beneath the title */
+.theme-girls .login-title::after {
+  content: '— ✦ —';
+  display: block;
+  font-style: normal;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.28em;
+  color: #b8967e;
+  margin-top: 0.55rem;
 }
 
 .theme-girls .login-subtitle {
   color: var(--text-muted);
   font-family: 'Lato', sans-serif;
   font-weight: 300;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  letter-spacing: 0.02em;
 }
 
 .theme-girls .input-label {
   font-family: 'Lato', sans-serif;
-  font-size: 0.8rem;
-  letter-spacing: 0.05em;
-  color: var(--accent);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 .theme-girls .password-input {
-  background: #fdf6f9;
-  border: 1.5px solid rgba(232,116,154,0.3);
+  background: #faf6f2;
+  border: 1px solid rgba(184, 150, 126, 0.35);
   color: var(--text);
   font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  border-radius: 6px;
 }
 
 .theme-girls .password-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(232,116,154,0.12);
+  box-shadow: 0 0 0 3px rgba(184, 150, 126, 0.1);
 }
 
 .theme-girls .btn-primary {
-  background: linear-gradient(135deg, #e8749a, #c9588a);
+  background: #b8967e;
   color: #fff;
   font-family: 'Lato', sans-serif;
   font-weight: 400;
-  letter-spacing: 0.04em;
-  border-radius: 50px;
-  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  border-radius: 6px;
 }
 
-.theme-girls .btn-primary:active { background: linear-gradient(135deg, #d4607e, #b5466e); }
+.theme-girls .btn-primary:active { background: #a4836b; }
 
 .theme-girls .team-badge {
-  background: linear-gradient(135deg, #e8749a, #c9588a);
-  color: #fff;
+  background: rgba(184, 150, 126, 0.1);
+  color: var(--accent);
+  border: 1px solid rgba(184, 150, 126, 0.3);
   font-family: 'Lato', sans-serif;
-  font-size: 0.7rem;
-  letter-spacing: 0.06em;
-  border-radius: 50px;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 4px;
 }
 
 .theme-girls .clue-card {
   border: 1px solid var(--card-border);
-  background: rgba(255,255,255,0.95);
-  box-shadow: 0 4px 24px rgba(232,116,154,0.1);
-  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 2px 16px rgba(120, 80, 60, 0.07);
+  border-radius: 12px;
 }
 
 .theme-girls .clue-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #f9d4e2, var(--accent), #c9a0b8, #f9d4e2);
-  border-radius: 20px 20px 0 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #b8967e 35%, #b8967e 65%, transparent);
+  border-radius: 12px 12px 0 0;
 }
 
 .theme-girls .clue-sublabel {
   font-family: 'Lato', sans-serif;
   color: var(--accent);
-  font-size: 0.7rem;
-  letter-spacing: 0.08em;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
 .theme-girls .clue-title {
   font-family: 'Playfair Display', serif;
   font-weight: 700;
+  font-style: italic;
   color: var(--text);
 }
 
 .theme-girls .clue-text {
-  color: #6b4c5e;
-  line-height: 1.7;
+  color: #5a4040;
+  line-height: 1.72;
   font-family: 'Lato', sans-serif;
   font-weight: 300;
-  font-size: 1.05rem;
+  font-size: 1rem;
 }
 
 .theme-girls .btn-check {
-  background: linear-gradient(135deg, #e8749a, #c9588a);
+  background: #b8967e;
   color: #fff;
   border: none;
-  border-radius: 50px;
+  border-radius: 6px;
   font-family: 'Lato', sans-serif;
-  letter-spacing: 0.04em;
-  box-shadow: 0 4px 16px rgba(232,116,154,0.35);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 10px rgba(184, 150, 126, 0.25);
 }
 
-.theme-girls .btn-check:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(232,116,154,0.2); }
+.theme-girls .btn-check:active { transform: scale(0.98); box-shadow: 0 1px 4px rgba(184, 150, 126, 0.15); }
 
 .theme-girls .btn-check.loading {
-  background: linear-gradient(135deg, #d4a0bc, #c4a0b8);
+  background: #d4b09a;
   box-shadow: none;
   animation: pulse-girls 1.2s ease-in-out infinite;
 }
 
 .theme-girls .btn-next {
-  background: linear-gradient(135deg, #e8749a, #c9588a);
+  background: #b8967e;
   color: #fff;
-  border-radius: 50px;
+  border-radius: 6px;
   font-family: 'Lato', sans-serif;
-  box-shadow: 0 4px 16px rgba(232,116,154,0.3);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  box-shadow: 0 2px 10px rgba(184, 150, 126, 0.2);
 }
 
 .theme-girls .hit-title {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  color: var(--accent);
+  color: var(--text);
 }
 
-.theme-girls .progress-bar-fill {
-  background: linear-gradient(90deg, #e8749a, #c9a0b8);
-}
+.theme-girls .progress-bar-fill { background: #b8967e; }
 
 .theme-girls .progress-label,
 .theme-girls .progress-count {
   font-family: 'Lato', sans-serif;
   color: var(--text-muted);
-  font-size: 0.75rem;
-  letter-spacing: 0.04em;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .theme-girls .hint-text {
   color: var(--text-muted);
   font-family: 'Lato', sans-serif;
-  font-size: 0.9rem;
+  font-weight: 300;
+  font-size: 0.88rem;
 }
 
 .theme-girls .finale-title {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  color: var(--accent);
+  color: var(--text);
 }
 
 .theme-girls .finale-message {
   font-family: 'Lato', sans-serif;
   font-weight: 300;
-  color: #6b4c5e;
+  color: #5a4040;
+  line-height: 1.75;
 }
+
+/* Keeps floating typographic marks very subtle */
+.theme-girls .ambient-bg { opacity: 0.2; }
+.theme-girls .petal { color: #b8967e; }
 
 @keyframes pulse-girls {
   0%, 100% { opacity: 1; }
@@ -690,7 +728,7 @@ html, body {
 }
 
 .theme-girls .hit-overlay {
-  background: rgba(253,246,249,0.97);
+  background: rgba(250,246,242,0.97);
 }
 
 .hit-overlay.hidden { display: none; }
@@ -733,7 +771,7 @@ html, body {
 }
 
 .theme-guys .finale-content { background: rgba(14,14,14,0.85); border-radius: 16px; }
-.theme-girls .finale-content { background: rgba(255,255,255,0.88); border-radius: 20px; }
+.theme-girls .finale-content { background: rgba(255,255,255,0.92); border-radius: 12px; border: 1px solid rgba(184,150,126,0.2); }
 
 .finale-icon {
   font-size: 4rem;
