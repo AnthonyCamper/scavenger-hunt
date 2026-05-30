@@ -1,0 +1,807 @@
+/* ============================================================
+   BASE RESET & VARIABLES
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --accent: #f0b429;
+  --bg: #0f0f0f;
+  --card-bg: #1a1a1a;
+  --text: #e8e8e8;
+  --text-muted: #888;
+  --radius: 12px;
+  --font-heading: 'Barlow', sans-serif;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-body: system-ui, sans-serif;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ============================================================
+   AMBIENT BACKGROUNDS — Girls theme elements
+   ============================================================ */
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* ============================================================
+   ██████  GUYS THEME
+   ============================================================ */
+.theme-guys {
+  --accent: #f0b429;
+  --bg: #0e0e0e;
+  --card-bg: #181818;
+  --card-border: rgba(240, 180, 41, 0.25);
+  --text: #e8e8e8;
+  --text-muted: #777;
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #0e0e0e;
+  --font-heading: 'Barlow', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Grid lines overlay for guys */
+.theme-guys .ambient-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(240,180,41,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(240,180,41,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Scanline glow */
+.theme-guys .ambient-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(240,180,41,0.07) 0%, transparent 70%);
+}
+
+/* Guys login card */
+.theme-guys .login-card {
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: 0 0 40px rgba(240,180,41,0.1), 0 2px 8px rgba(0,0,0,0.6);
+}
+
+.theme-guys .login-title {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  font-size: clamp(1.6rem, 7vw, 2.6rem);
+  color: var(--accent);
+}
+
+.theme-guys .login-subtitle {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.theme-guys .input-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.theme-guys .password-input {
+  font-family: var(--font-mono);
+  background: #0f0f0f;
+  border: 1px solid rgba(240,180,41,0.3);
+  color: var(--accent);
+  letter-spacing: 0.1em;
+}
+
+.theme-guys .password-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(240,180,41,0.15);
+}
+
+.theme-guys .btn-primary {
+  background: var(--accent);
+  color: #0e0e0e;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+}
+
+.theme-guys .btn-primary:active { background: #d49e1f; }
+
+.theme-guys .team-badge {
+  font-family: var(--font-mono);
+  background: var(--accent);
+  color: #0e0e0e;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+}
+
+.theme-guys .clue-card {
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  box-shadow: 0 0 30px rgba(240,180,41,0.08);
+}
+
+/* Top edge glow for guys clue card */
+.theme-guys .clue-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.theme-guys .clue-sublabel {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.theme-guys .clue-title {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+.theme-guys .clue-text {
+  color: #b0b0b0;
+  line-height: 1.65;
+}
+
+.theme-guys .btn-check {
+  background: transparent;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.theme-guys .btn-check:active {
+  background: rgba(240,180,41,0.12);
+}
+
+.theme-guys .btn-check.loading {
+  border-color: #555;
+  color: #555;
+  animation: pulse-guys 1.2s ease-in-out infinite;
+}
+
+.theme-guys .btn-next {
+  background: var(--accent);
+  color: #0e0e0e;
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+}
+
+.theme-guys .hit-title {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+}
+
+.theme-guys .progress-bar-fill { background: var(--accent); }
+
+.theme-guys .progress-label,
+.theme-guys .progress-count {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.theme-guys .hint-text { color: #aaa; font-family: var(--font-mono); font-size: 0.85rem; }
+
+.theme-guys .finale-title {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  color: var(--accent);
+  letter-spacing: 0.06em;
+}
+
+@keyframes pulse-guys {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============================================================
+   💐 GIRLS THEME
+   ============================================================ */
+.theme-girls {
+  --accent: #e8749a;
+  --accent2: #c9a0b8;
+  --bg: #fdf6f9;
+  --card-bg: #fff;
+  --card-border: rgba(232,116,154,0.2);
+  --text: #3a2535;
+  --text-muted: #9b7e8e;
+  --btn-primary-bg: var(--accent);
+  --btn-primary-text: #fff;
+  background: linear-gradient(160deg, #fdf6f9 0%, #f7eef6 50%, #fde8ef 100%);
+  color: var(--text);
+}
+
+.theme-girls .login-bg-overlay {
+  background: linear-gradient(160deg, #fdf6f9 0%, #f7eef6 50%, #fde8ef 100%);
+}
+
+.theme-girls .login-card {
+  border: 1px solid var(--card-border);
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 40px rgba(232,116,154,0.12), 0 2px 8px rgba(180,100,140,0.08);
+}
+
+.theme-girls .login-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 7vw, 2.5rem);
+  color: var(--accent);
+  letter-spacing: 0.01em;
+}
+
+.theme-girls .login-subtitle {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 0.9rem;
+}
+
+.theme-girls .input-label {
+  font-family: 'Lato', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: var(--accent);
+}
+
+.theme-girls .password-input {
+  background: #fdf6f9;
+  border: 1.5px solid rgba(232,116,154,0.3);
+  color: var(--text);
+  font-family: 'Lato', sans-serif;
+}
+
+.theme-girls .password-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(232,116,154,0.12);
+}
+
+.theme-girls .btn-primary {
+  background: linear-gradient(135deg, #e8749a, #c9588a);
+  color: #fff;
+  font-family: 'Lato', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  border-radius: 50px;
+  font-size: 1rem;
+}
+
+.theme-girls .btn-primary:active { background: linear-gradient(135deg, #d4607e, #b5466e); }
+
+.theme-girls .team-badge {
+  background: linear-gradient(135deg, #e8749a, #c9588a);
+  color: #fff;
+  font-family: 'Lato', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
+  border-radius: 50px;
+}
+
+.theme-girls .clue-card {
+  border: 1px solid var(--card-border);
+  background: rgba(255,255,255,0.95);
+  box-shadow: 0 4px 24px rgba(232,116,154,0.1);
+  border-radius: 20px;
+}
+
+.theme-girls .clue-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #f9d4e2, var(--accent), #c9a0b8, #f9d4e2);
+  border-radius: 20px 20px 0 0;
+}
+
+.theme-girls .clue-sublabel {
+  font-family: 'Lato', sans-serif;
+  color: var(--accent);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.theme-girls .clue-title {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.theme-girls .clue-text {
+  color: #6b4c5e;
+  line-height: 1.7;
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+}
+
+.theme-girls .btn-check {
+  background: linear-gradient(135deg, #e8749a, #c9588a);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-family: 'Lato', sans-serif;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 16px rgba(232,116,154,0.35);
+}
+
+.theme-girls .btn-check:active { transform: scale(0.97); box-shadow: 0 2px 8px rgba(232,116,154,0.2); }
+
+.theme-girls .btn-check.loading {
+  background: linear-gradient(135deg, #d4a0bc, #c4a0b8);
+  box-shadow: none;
+  animation: pulse-girls 1.2s ease-in-out infinite;
+}
+
+.theme-girls .btn-next {
+  background: linear-gradient(135deg, #e8749a, #c9588a);
+  color: #fff;
+  border-radius: 50px;
+  font-family: 'Lato', sans-serif;
+  box-shadow: 0 4px 16px rgba(232,116,154,0.3);
+}
+
+.theme-girls .hit-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--accent);
+}
+
+.theme-girls .progress-bar-fill {
+  background: linear-gradient(90deg, #e8749a, #c9a0b8);
+}
+
+.theme-girls .progress-label,
+.theme-girls .progress-count {
+  font-family: 'Lato', sans-serif;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.theme-girls .hint-text {
+  color: var(--text-muted);
+  font-family: 'Lato', sans-serif;
+  font-size: 0.9rem;
+}
+
+.theme-girls .finale-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--accent);
+}
+
+.theme-girls .finale-message {
+  font-family: 'Lato', sans-serif;
+  font-weight: 300;
+  color: #6b4c5e;
+}
+
+@keyframes pulse-girls {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+/* ============================================================
+   LOGIN LAYOUT
+   ============================================================ */
+.login-bg-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--bg);
+}
+
+.login-card {
+  position: relative;
+  z-index: 1;
+  width: min(90vw, 400px);
+  padding: clamp(1.8rem, 6vw, 2.8rem);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-icon {
+  font-size: 2.4rem;
+  text-align: center;
+  line-height: 1;
+}
+
+.login-title {
+  text-align: center;
+  line-height: 1.1;
+}
+
+.login-subtitle {
+  text-align: center;
+  margin-top: -0.3rem;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.input-wrap {
+  position: relative;
+  display: flex;
+}
+
+.password-input {
+  flex: 1;
+  padding: 0.85rem 3rem 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+
+.toggle-pw {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+.toggle-pw:hover { opacity: 1; }
+
+.error-msg {
+  min-height: 1.2em;
+  color: #e05555;
+  font-size: 0.82rem;
+  text-align: center;
+  transition: opacity 0.2s;
+}
+
+.theme-girls .error-msg { color: #c04070; }
+
+/* Shake animation for wrong password */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.shake { animation: shake 0.4s ease; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.5rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.1s, opacity 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-check {
+  font-size: 1.05rem;
+  padding: 1.1rem 1.5rem;
+  border-radius: var(--radius);
+  margin-top: 0.5rem;
+}
+
+.btn-next {
+  margin-top: 1.5rem;
+  font-size: 1.05rem;
+  padding: 1.1rem;
+  border-radius: var(--radius);
+}
+
+/* ============================================================
+   HUNT SCREEN LAYOUT
+   ============================================================ */
+.hunt-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem 0;
+  position: relative;
+  z-index: 1;
+}
+
+.team-badge {
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.progress-bar-track {
+  width: 100%;
+  height: 3px;
+  background: rgba(128,128,128,0.15);
+  margin-top: 0.6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.theme-girls .progress-bar-track { background: rgba(232,116,154,0.1); }
+
+.progress-bar-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+
+.hunt-main {
+  flex: 1;
+  width: 100%;
+  max-width: 480px;
+  padding: 1.2rem 1.2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+  z-index: 1;
+  overflow-y: auto;
+}
+
+.clue-card {
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.clue-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.clue-emoji {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.clue-sublabel {
+  display: block;
+  margin-bottom: 0.2rem;
+}
+
+.clue-title {
+  font-size: clamp(1.15rem, 4vw, 1.4rem);
+  line-height: 1.2;
+}
+
+.clue-text {
+  font-size: clamp(0.95rem, 3vw, 1.05rem);
+  line-height: 1.65;
+}
+
+/* ============================================================
+   CHECK AREA & HIT OVERLAY
+   ============================================================ */
+.check-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hint-text {
+  text-align: center;
+  font-size: 0.9rem;
+  min-height: 1.3em;
+  line-height: 1.4;
+  padding: 0 0.5rem;
+}
+
+.hit-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  gap: 0.8rem;
+  transition: opacity 0.3s ease;
+}
+
+.theme-guys .hit-overlay {
+  background: rgba(14,14,14,0.96);
+}
+
+.theme-girls .hit-overlay {
+  background: rgba(253,246,249,0.97);
+}
+
+.hit-overlay.hidden { display: none; }
+
+.hit-icon {
+  font-size: 4rem;
+  animation: pop-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes pop-in {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.hit-title {
+  font-size: clamp(1.5rem, 7vw, 2.2rem);
+  animation: pop-in 0.4s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.hit-subtitle {
+  font-size: 1rem;
+  opacity: 0.7;
+  animation: pop-in 0.4s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+/* ============================================================
+   FINALE SCREEN
+   ============================================================ */
+.finale-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 2.5rem 1.5rem;
+  text-align: center;
+  max-width: 480px;
+}
+
+.theme-guys .finale-content { background: rgba(14,14,14,0.85); border-radius: 16px; }
+.theme-girls .finale-content { background: rgba(255,255,255,0.88); border-radius: 20px; }
+
+.finale-icon {
+  font-size: 4rem;
+  animation: pop-in 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+
+.finale-title {
+  font-size: clamp(1.6rem, 7vw, 2.4rem);
+  line-height: 1.1;
+}
+
+.finale-message {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 360px;
+}
+
+.theme-guys .finale-message { color: #b0b0b0; font-family: var(--font-mono); font-size: 0.9rem; }
+
+.finale-time {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  margin-top: 0.5rem;
+}
+
+.theme-guys .finale-time { font-family: var(--font-mono); }
+
+/* ============================================================
+   FLOATING HEARTS / PETALS — Girls ambient
+   ============================================================ */
+.petal {
+  position: absolute;
+  pointer-events: none;
+  animation: float-petal linear infinite;
+  opacity: 0;
+  font-size: 1rem;
+  user-select: none;
+}
+
+@keyframes float-petal {
+  0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.7; }
+  90% { opacity: 0.5; }
+  100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+}
+
+/* ============================================================
+   RESET TAP ZONE (hidden)
+   ============================================================ */
+.reset-tap-zone {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 60px;
+  height: 60px;
+  z-index: 200;
+}
+
+/* ============================================================
+   UTILITY
+   ============================================================ */
+.hidden { display: none !important; }
+
+/* Smooth screen fade */
+.screen { will-change: opacity; }
+
+/* Safe area on notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .hunt-main { padding-bottom: calc(2rem + env(safe-area-inset-bottom)); }
+  .finale-content { padding-bottom: calc(2.5rem + env(safe-area-inset-bottom)); }
+}

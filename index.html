@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#1a1a1a" id="meta-theme-color" />
+  <title>The Hunt Is On 🎯</title>
+
+  <!-- Google Fonts — both themes, loaded together -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@700;900&family=Playfair+Display:ital,wght@0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
+
+  <!-- canvas-confetti CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="theme-guys" id="app-body">
+
+  <!-- ============================== LOGIN SCREEN ============================== -->
+  <div id="screen-login" class="screen active">
+    <div class="login-bg-overlay"></div>
+
+    <!-- Guys: grid lines / Girls: floating petals -->
+    <div class="ambient-bg" id="ambient-bg"></div>
+
+    <div class="login-card">
+      <div class="login-icon" id="login-icon">🎯</div>
+      <h1 class="login-title" id="login-title">THE HUNT IS ON</h1>
+      <p class="login-subtitle" id="login-subtitle">Enter your team's code to begin.</p>
+
+      <form id="login-form" autocomplete="off">
+        <label class="input-label" id="login-label">ENTER ACCESS CODE</label>
+        <div class="input-wrap">
+          <input
+            type="password"
+            id="password-input"
+            class="password-input"
+            placeholder="Access code..."
+            autocomplete="new-password"
+            spellcheck="false"
+          />
+          <button type="button" id="toggle-pw" class="toggle-pw" aria-label="Show password">👁</button>
+        </div>
+        <p class="error-msg" id="error-msg"></p>
+        <button type="submit" id="login-btn" class="btn btn-primary">INITIATE MISSION</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ============================== HUNT SCREEN ============================== -->
+  <div id="screen-hunt" class="screen">
+    <div class="ambient-bg ambient-bg-hunt" id="ambient-bg-hunt"></div>
+
+    <header class="hunt-header">
+      <div class="team-badge" id="team-badge">TEAM GUYS</div>
+      <div class="progress-wrap">
+        <span class="progress-label" id="progress-label">OBJECTIVE</span>
+        <span class="progress-count" id="progress-count">1 / 8</span>
+      </div>
+    </header>
+
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progress-bar-fill"></div>
+    </div>
+
+    <main class="hunt-main">
+      <div class="clue-card" id="clue-card">
+        <div class="clue-card-header">
+          <span class="clue-emoji" id="clue-emoji">🥂</span>
+          <div>
+            <span class="clue-sublabel" id="clue-label">BRIEFING</span>
+            <h2 class="clue-title" id="clue-title">Where It All Began</h2>
+          </div>
+        </div>
+        <p class="clue-text" id="clue-text">Clue text loads here.</p>
+      </div>
+
+      <!-- Location check area -->
+      <div class="check-area" id="check-area">
+        <button class="btn btn-check" id="check-btn">CHECK LOCATION</button>
+        <p class="hint-text" id="hint-text"></p>
+      </div>
+
+      <!-- Hit overlay (shown on success) -->
+      <div class="hit-overlay hidden" id="hit-overlay">
+        <div class="hit-icon" id="hit-icon">🎯</div>
+        <h2 class="hit-title" id="hit-title">TARGET ACQUIRED</h2>
+        <p class="hit-subtitle" id="hit-subtitle">Location confirmed.</p>
+        <button class="btn btn-next" id="next-btn">NEXT OBJECTIVE →</button>
+      </div>
+    </main>
+
+    <!-- Hidden reset (tap progress count 5x) -->
+    <div class="reset-tap-zone" id="reset-tap-zone" title="Secret reset"></div>
+  </div>
+
+  <!-- ============================== FINALE SCREEN ============================== -->
+  <div id="screen-finale" class="screen">
+    <div class="ambient-bg" id="ambient-bg-finale"></div>
+    <div class="finale-content">
+      <div class="finale-icon" id="finale-icon">🏆</div>
+      <h1 class="finale-title" id="finale-title">MISSION COMPLETE.</h1>
+      <p class="finale-message" id="finale-message">Closing message loads here.</p>
+      <div class="finale-time" id="finale-time"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
