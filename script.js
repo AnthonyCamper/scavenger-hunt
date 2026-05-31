@@ -194,7 +194,7 @@
 
     setTimeout(() => {
       huntMap.invalidateSize();
-      updateHuntMap();
+      resetHuntMap();
     }, 60);
   }
 
@@ -202,7 +202,19 @@
     $("map-overlay").classList.add("hidden");
   }
 
-  function updateHuntMap() {
+  // Show a general lake view — no target revealed
+  function resetHuntMap() {
+    if (!huntMap) return;
+    if (targetMarker) { huntMap.removeLayer(targetMarker); targetMarker = null; }
+    if (targetCircle) { huntMap.removeLayer(targetCircle); targetCircle = null; }
+    const clue = CONFIG.clues[clueIndex];
+    $("map-topbar-title").textContent = `${clue.emoji || ""} ${clue.title}`;
+    // Center on Lake Anna without zooming in on the answer
+    huntMap.setView([38.055, -77.795], 12);
+  }
+
+  // Called only after a successful hit — now it's safe to show the pin
+  function revealTargetOnMap() {
     if (!huntMap) return;
     const clue = CONFIG.clues[clueIndex];
     const radius = clue.radius ?? CONFIG.HIT_RADIUS_METERS;
@@ -226,7 +238,6 @@
       icon: L.divIcon({ className: "", html: pinEl.outerHTML, iconSize: [36, 36], iconAnchor: [18, 18] }),
     }).addTo(huntMap);
 
-    $("map-topbar-title").textContent = `${clue.emoji || ""} ${clue.title}`;
     huntMap.setView([clue.lat, clue.lng], 15);
   }
 
@@ -367,6 +378,7 @@
     $("next-btn").textContent = th.nextButton;
     $("hit-overlay").classList.remove("hidden");
 
+    revealTargetOnMap();
     launchConfetti();
   }
 
