@@ -20,6 +20,8 @@
   let targetMarker = null;
   let targetCircle = null;
   let userMarker = null;
+  let dirArrow = null;
+  let dirArrowHead = null;
 
   // ─── Boot ─────────────────────────────────────────────────────────────────
   function boot() {
@@ -165,7 +167,7 @@
     $("next-btn").addEventListener("click", advanceClue);
     $("map-btn").addEventListener("click", openMapOverlay);
     $("map-close-btn").addEventListener("click", closeMapOverlay);
-    $("map-locate-btn").addEventListener("click", locateOnMap);
+    $("map-locate-btn").addEventListener("click", locateAndOrient);
 
     // Secret reset: tap the reset zone 5 times quickly
     $("reset-tap-zone").addEventListener("click", () => {
@@ -192,9 +194,14 @@
       ).addTo(huntMap);
     }
 
+    const clue = CONFIG.clues[clueIndex];
+    $("map-topbar-title").textContent = `${clue.emoji || ""} ${clue.title}`;
+    $("map-hint-text").textContent = "Locating you…";
+
     setTimeout(() => {
       huntMap.invalidateSize();
-      resetHuntMap();
+      huntMap.setView([38.055, -77.795], 12); // general lake view while GPS fires
+      locateAndOrient();
     }, 60);
   }
 
@@ -202,20 +209,90 @@
     $("map-overlay").classList.add("hidden");
   }
 
-  // Show a general lake view — no target revealed
-  function resetHuntMap() {
+  function locateAndOrient() {
     if (!huntMap) return;
-    if (targetMarker) { huntMap.removeLayer(targetMarker); targetMarker = null; }
-    if (targetCircle) { huntMap.removeLayer(targetCircle); targetCircle = null; }
-    const clue = CONFIG.clues[clueIndex];
-    $("map-topbar-title").textContent = `${clue.emoji || ""} ${clue.title}`;
-    // Center on Lake Anna without zooming in on the answer
-    huntMap.setView([38.055, -77.795], 12);
+    if (!navigator.geolocation) {
+      $("map-hint-text").textContent = "Location not available on this device.";
+      return;
+    }
+
+    $("map-locate-btn").textContent = "Locating…";
+    $("map-locate-btn").disabled = true;
+    $("map-hint-text").textContent = "Locating you…";
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        $("map-locate-btn").textContent = "Relocate";
+        $("map-locate-btn").disabled = false;
+
+        const { latitude, longitude } = pos.coords;
+        const clue = CONFIG.clues[clueIndex];
+        const dist = Math.round(haversine(latitude, longitude, clue.lat, clue.lng));
+        const bearing = bearingTo(latitude, longitude, clue.lat, clue.lng);
+        const dir = cardinalDir(bearing);
+
+        // User dot
+        if (userMarker) huntMap.removeLayer(userMarker);
+        const dotEl = document.createElement("div");
+        dotEl.className = "map-user-dot";
+        userMarker = L.marker([latitude, longitude], {
+          icon: L.divIcon({ className: "", html: dotEl.outerHTML, iconSize: [16, 16], iconAnchor: [8, 8] }),
+        }).addTo(huntMap);
+
+        // Direction arrow (short line — doesn't reach the target)
+        if (dirArrow) { huntMap.removeLayer(dirArrow); dirArrow = null; }
+        if (dirArrowHead) { huntMap.removeLayer(dirArrowHead); dirArrowHead = null; }
+
+        if (dist > 40) {
+          const arrowLen = Math.min(dist * 0.3, 120); // max 120m, never overshoots when close
+          const tip = destPoint(latitude, longitude, bearing, arrowLen);
+          const accentColor = team === "girls" ? "#b8967e" : "#f0b429";
+
+          dirArrow = L.polyline([[latitude, longitude], tip], {
+            color: accentColor, weight: 3, dashArray: "8 6", opacity: 0.85,
+          }).addTo(huntMap);
+
+          const headEl = document.createElement("div");
+          headEl.className = "map-arrow-head";
+          headEl.style.transform = `rotate(${bearing}deg)`;
+          headEl.style.color = accentColor;
+          dirArrowHead = L.marker(tip, {
+            icon: L.divIcon({ className: "", html: headEl.outerHTML, iconSize: [20, 20], iconAnchor: [10, 10] }),
+          }).addTo(huntMap);
+        }
+
+        // Hint text
+        const dirWords = { N:"north", NE:"northeast", E:"east", SE:"southeast", S:"south", SW:"southwest", W:"west", NW:"northwest" };
+        const distLabel = dist < 1000 ? dist + "m" : (dist / 1000).toFixed(1) + "km";
+        $("map-hint-text").textContent = dist <= 40
+          ? "Right on it — check your location now!"
+          : `${dirArrowEmoji(dir)} Head ${dirWords[dir]} — ~${distLabel} away`;
+
+        // Center on user, zoomed in
+        huntMap.setView([latitude, longitude], 15);
+      },
+      (err) => {
+        $("map-locate-btn").textContent = "Relocate";
+        $("map-locate-btn").disabled = false;
+        const msgs = {
+          1: "Location access denied — enable it in browser settings.",
+          2: "Couldn’t get location — try stepping outside.",
+          3: "Location timed out — try again.",
+        };
+        $("map-hint-text").textContent = msgs[err.code] || "Couldn’t get location.";
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+    );
   }
 
-  // Called only after a successful hit — now it's safe to show the pin
+  // Called only after a successful hit — now safe to show the exact pin
   function revealTargetOnMap() {
     if (!huntMap) return;
+
+    // Clear direction arrow — no longer needed
+    if (dirArrow) { huntMap.removeLayer(dirArrow); dirArrow = null; }
+    if (dirArrowHead) { huntMap.removeLayer(dirArrowHead); dirArrowHead = null; }
+
     const clue = CONFIG.clues[clueIndex];
     const radius = clue.radius ?? CONFIG.HIT_RADIUS_METERS;
     const accentColor = team === "girls" ? "#b8967e" : "#f0b429";
@@ -224,11 +301,7 @@
     if (targetCircle) { huntMap.removeLayer(targetCircle); targetCircle = null; }
 
     targetCircle = L.circle([clue.lat, clue.lng], {
-      radius,
-      color: accentColor,
-      fillColor: accentColor,
-      fillOpacity: 0.18,
-      weight: 2,
+      radius, color: accentColor, fillColor: accentColor, fillOpacity: 0.18, weight: 2,
     }).addTo(huntMap);
 
     const pinEl = document.createElement("div");
@@ -238,41 +311,43 @@
       icon: L.divIcon({ className: "", html: pinEl.outerHTML, iconSize: [36, 36], iconAnchor: [18, 18] }),
     }).addTo(huntMap);
 
-    huntMap.setView([clue.lat, clue.lng], 15);
+    $("map-hint-text").textContent = "Target confirmed — nice work!";
+    if (userMarker) {
+      huntMap.fitBounds([userMarker.getLatLng(), [clue.lat, clue.lng]], { padding: [50, 50] });
+    } else {
+      huntMap.setView([clue.lat, clue.lng], 15);
+    }
   }
 
-  function locateOnMap() {
-    if (!huntMap) return;
-    if (!navigator.geolocation) return;
+  // ─── Navigation helpers ───────────────────────────────────────────────────
+  function bearingTo(lat1, lon1, lat2, lon2) {
+    const toR = (d) => d * Math.PI / 180;
+    const dLon = toR(lon2 - lon1);
+    const y = Math.sin(dLon) * Math.cos(toR(lat2));
+    const x = Math.cos(toR(lat1)) * Math.sin(toR(lat2)) -
+              Math.sin(toR(lat1)) * Math.cos(toR(lat2)) * Math.cos(dLon);
+    return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  }
 
-    $("map-locate-btn").textContent = "Locating…";
-    $("map-locate-btn").disabled = true;
+  function cardinalDir(bearing) {
+    const dirs = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    return dirs[Math.round(bearing / 45) % 8];
+  }
 
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        $("map-locate-btn").textContent = "📍 My Location";
-        $("map-locate-btn").disabled = false;
+  function dirArrowEmoji(dir) {
+    return { N: "↑", NE: "↗", E: "→", SE: "↘", S: "↓", SW: "↙", W: "←", NW: "↖" }[dir] || "•";
+  }
 
-        const { latitude, longitude } = pos.coords;
-        if (userMarker) huntMap.removeLayer(userMarker);
-
-        const el = document.createElement("div");
-        el.className = "map-user-dot";
-        userMarker = L.marker([latitude, longitude], {
-          icon: L.divIcon({ className: "", html: el.outerHTML, iconSize: [16, 16], iconAnchor: [8, 8] }),
-        }).bindPopup("You are here").addTo(huntMap);
-
-        huntMap.fitBounds(
-          [[latitude, longitude], [CONFIG.clues[clueIndex].lat, CONFIG.clues[clueIndex].lng]],
-          { padding: [40, 40] }
-        );
-      },
-      () => {
-        $("map-locate-btn").textContent = "📍 My Location";
-        $("map-locate-btn").disabled = false;
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
+  // Returns a point `distMeters` away from (lat, lon) along `bearing`
+  function destPoint(lat, lon, bearing, distMeters) {
+    const R = 6371000;
+    const d = distMeters / R;
+    const b = bearing * Math.PI / 180;
+    const lat1 = lat * Math.PI / 180;
+    const lon1 = lon * Math.PI / 180;
+    const lat2 = Math.asin(Math.sin(lat1) * Math.cos(d) + Math.cos(lat1) * Math.sin(d) * Math.cos(b));
+    const lon2 = lon1 + Math.atan2(Math.sin(b) * Math.sin(d) * Math.cos(lat1), Math.cos(d) - Math.sin(lat1) * Math.sin(lat2));
+    return [lat2 * 180 / Math.PI, lon2 * 180 / Math.PI];
   }
 
   // ─── Clue rendering ───────────────────────────────────────────────────────
