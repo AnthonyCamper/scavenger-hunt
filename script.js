@@ -15,6 +15,12 @@
   let resetTapCount = 0;
   let resetTapTimer = null;
 
+  // Map state
+  let huntMap = null;
+  let targetMarker = null;
+  let targetCircle = null;
+  let userMarker = null;
+
   // ─── Boot ─────────────────────────────────────────────────────────────────
   function boot() {
     const saved = tryLoadSave();
@@ -57,6 +63,7 @@
     team = null;
     clueIndex = 0;
     hideHitOverlay();
+    closeMapOverlay();
     showLogin();
   }
 
@@ -156,6 +163,9 @@
   function wireHunt() {
     $("check-btn").addEventListener("click", handleLocationCheck);
     $("next-btn").addEventListener("click", advanceClue);
+    $("map-btn").addEventListener("click", openMapOverlay);
+    $("map-close-btn").addEventListener("click", closeMapOverlay);
+    $("map-locate-btn").addEventListener("click", locateOnMap);
 
     // Secret reset: tap the reset zone 5 times quickly
     $("reset-tap-zone").addEventListener("click", () => {
@@ -168,6 +178,90 @@
         resetTapTimer = setTimeout(() => { resetTapCount = 0; }, 2000);
       }
     });
+  }
+
+  // ─── Map overlay ──────────────────────────────────────────────────────────
+  function openMapOverlay() {
+    $("map-overlay").classList.remove("hidden");
+
+    if (!huntMap) {
+      huntMap = L.map("hunt-map", { zoomControl: true, attributionControl: true });
+      L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        { attribution: "Tiles &copy; Esri", maxZoom: 19 }
+      ).addTo(huntMap);
+    }
+
+    setTimeout(() => {
+      huntMap.invalidateSize();
+      updateHuntMap();
+    }, 60);
+  }
+
+  function closeMapOverlay() {
+    $("map-overlay").classList.add("hidden");
+  }
+
+  function updateHuntMap() {
+    if (!huntMap) return;
+    const clue = CONFIG.clues[clueIndex];
+    const radius = clue.radius ?? CONFIG.HIT_RADIUS_METERS;
+    const accentColor = team === "girls" ? "#b8967e" : "#f0b429";
+
+    if (targetMarker) { huntMap.removeLayer(targetMarker); targetMarker = null; }
+    if (targetCircle) { huntMap.removeLayer(targetCircle); targetCircle = null; }
+
+    targetCircle = L.circle([clue.lat, clue.lng], {
+      radius,
+      color: accentColor,
+      fillColor: accentColor,
+      fillOpacity: 0.18,
+      weight: 2,
+    }).addTo(huntMap);
+
+    const pinEl = document.createElement("div");
+    pinEl.className = "map-pin-icon";
+    pinEl.textContent = clue.emoji || "📍";
+    targetMarker = L.marker([clue.lat, clue.lng], {
+      icon: L.divIcon({ className: "", html: pinEl.outerHTML, iconSize: [36, 36], iconAnchor: [18, 18] }),
+    }).addTo(huntMap);
+
+    $("map-topbar-title").textContent = `${clue.emoji || ""} ${clue.title}`;
+    huntMap.setView([clue.lat, clue.lng], 15);
+  }
+
+  function locateOnMap() {
+    if (!huntMap) return;
+    if (!navigator.geolocation) return;
+
+    $("map-locate-btn").textContent = "Locating…";
+    $("map-locate-btn").disabled = true;
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        $("map-locate-btn").textContent = "📍 My Location";
+        $("map-locate-btn").disabled = false;
+
+        const { latitude, longitude } = pos.coords;
+        if (userMarker) huntMap.removeLayer(userMarker);
+
+        const el = document.createElement("div");
+        el.className = "map-user-dot";
+        userMarker = L.marker([latitude, longitude], {
+          icon: L.divIcon({ className: "", html: el.outerHTML, iconSize: [16, 16], iconAnchor: [8, 8] }),
+        }).bindPopup("You are here").addTo(huntMap);
+
+        huntMap.fitBounds(
+          [[latitude, longitude], [CONFIG.clues[clueIndex].lat, CONFIG.clues[clueIndex].lng]],
+          { padding: [40, 40] }
+        );
+      },
+      () => {
+        $("map-locate-btn").textContent = "📍 My Location";
+        $("map-locate-btn").disabled = false;
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
   }
 
   // ─── Clue rendering ───────────────────────────────────────────────────────
@@ -296,6 +390,7 @@
   function advanceClue() {
     clueIndex++;
     save();
+    closeMapOverlay();
 
     if (clueIndex >= CONFIG.clues.length) {
       showFinale();

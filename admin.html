@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hunt Admin — Clue Review</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@700;900&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0e0e0e;
+      --surface: #181818;
+      --surface2: #222;
+      --border: rgba(255,255,255,0.08);
+      --accent: #f0b429;
+      --text: #e8e8e8;
+      --muted: #666;
+      --mono: 'Share Tech Mono', monospace;
+      --head: 'Barlow', sans-serif;
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, sans-serif;
+    }
+
+    /* ── Gate ── */
+    #gate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .gate-card {
+      width: min(90vw, 380px);
+      background: var(--surface);
+      border: 1px solid rgba(240,180,41,0.2);
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+      box-shadow: 0 0 40px rgba(240,180,41,0.06);
+    }
+
+    .gate-logo {
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .gate-title {
+      font-family: var(--head);
+      font-weight: 900;
+      font-size: 1.5rem;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .gate-sub {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .gate-input {
+      width: 100%;
+      background: #0f0f0f;
+      border: 1px solid rgba(240,180,41,0.25);
+      border-radius: 8px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 1rem;
+      padding: 0.85rem 1rem;
+      letter-spacing: 0.08em;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .gate-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(240,180,41,0.12);
+    }
+
+    .gate-btn {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--accent);
+      color: #0e0e0e;
+      border: none;
+      border-radius: 8px;
+      font-family: var(--head);
+      font-weight: 900;
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .gate-btn:active { background: #d49e1f; transform: scale(0.98); }
+
+    .gate-error {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: #e05555;
+      text-align: center;
+      min-height: 1em;
+    }
+
+    /* ── Admin panel ── */
+    #admin-panel {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    #admin-panel.hidden { display: none; }
+
+    .admin-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.85rem 1.2rem;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .admin-header-title {
+      font-family: var(--head);
+      font-weight: 900;
+      font-size: 1rem;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .admin-counter {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    .admin-logout-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 0.35rem 0.8rem;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .admin-logout-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+
+    .admin-body {
+      flex: 1;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* ── Detail pane ── */
+    .admin-detail {
+      width: 360px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+    }
+
+    .detail-header {
+      padding: 1.2rem 1.2rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .detail-emoji {
+      font-size: 2.2rem;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.25rem;
+    }
+
+    .detail-title {
+      font-family: var(--head);
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: 0.03em;
+      color: #fff;
+    }
+
+    .detail-body {
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .detail-section-label {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .detail-clue-text {
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: #aaa;
+    }
+
+    .detail-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.7rem;
+      background: var(--surface2);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+
+    .meta-key {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .meta-val {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+    }
+
+    .copy-btn {
+      background: rgba(240,180,41,0.1);
+      border: 1px solid rgba(240,180,41,0.2);
+      color: var(--accent);
+      border-radius: 4px;
+      padding: 0.2rem 0.6rem;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      cursor: pointer;
+      letter-spacing: 0.06em;
+      transition: background 0.15s;
+    }
+
+    .copy-btn:hover { background: rgba(240,180,41,0.2); }
+
+    /* ── Map pane ── */
+    #admin-map {
+      flex: 1;
+      position: relative;
+    }
+
+    /* ── Nav footer ── */
+    .admin-nav {
+      display: flex;
+      gap: 0;
+      padding: 0.85rem 1.2rem;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .nav-btn {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border: 1px solid rgba(240,180,41,0.2);
+      background: transparent;
+      color: var(--accent);
+      font-family: var(--head);
+      font-weight: 900;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .nav-btn:hover { background: rgba(240,180,41,0.08); }
+    .nav-btn:active { transform: scale(0.98); }
+    .nav-btn:disabled { opacity: 0.25; cursor: default; }
+    .nav-btn + .nav-btn { margin-left: 0.75rem; }
+
+    /* ── All-clues overview ── */
+    .clue-dots {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      padding: 0 1.2rem;
+    }
+
+    .clue-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: 1px solid rgba(240,180,41,0.3);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .clue-dot.active {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    /* ── Responsive: stack on narrow screens ── */
+    @media (max-width: 700px) {
+      .admin-body { flex-direction: column; }
+      .admin-detail { width: 100%; max-height: 55vh; border-right: none; border-bottom: 1px solid var(--border); }
+      #admin-map { min-height: 45vh; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Password gate ── -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-logo">🗺️</div>
+      <h1 class="gate-title">Hunt Admin</h1>
+      <p class="gate-sub">Clue review — authorized personnel only</p>
+      <input type="password" id="admin-pw" class="gate-input" placeholder="Admin password…" autocomplete="off" />
+      <p class="gate-error" id="gate-error"></p>
+      <button class="gate-btn" id="admin-login-btn">Enter</button>
+    </div>
+  </div>
+
+  <!-- ── Admin panel ── -->
+  <div id="admin-panel" class="hidden">
+    <header class="admin-header">
+      <span class="admin-header-title">Clue Review</span>
+      <div class="clue-dots" id="clue-dots"></div>
+      <span class="admin-counter" id="admin-counter">1 / 4</span>
+      <button class="admin-logout-btn" id="admin-logout-btn">Exit</button>
+    </header>
+
+    <div class="admin-body">
+      <!-- Detail pane -->
+      <div class="admin-detail">
+        <div class="detail-header">
+          <div class="detail-emoji" id="detail-emoji">💀</div>
+          <div class="detail-tag" id="detail-tag">Clue 1 of 4</div>
+          <div class="detail-title" id="detail-title">What Remains</div>
+        </div>
+
+        <div class="detail-body">
+          <div>
+            <div class="detail-section-label">Clue text</div>
+            <p class="detail-clue-text" id="detail-clue-text"></p>
+          </div>
+
+          <div>
+            <div class="detail-section-label">Location data</div>
+            <div class="detail-meta">
+              <div class="meta-row">
+                <span class="meta-key">Latitude</span>
+                <span class="meta-val" id="meta-lat">—</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-key">Longitude</span>
+                <span class="meta-val" id="meta-lng">—</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-key">Hit radius</span>
+                <span class="meta-val" id="meta-radius">—</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-key">Coordinates</span>
+                <button class="copy-btn" id="copy-coords-btn">Copy</button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="detail-section-label">Open in</div>
+            <div class="detail-meta">
+              <div class="meta-row">
+                <span class="meta-key">Google Maps</span>
+                <a class="copy-btn" id="gmaps-link" href="#" target="_blank" rel="noopener">Open ↗</a>
+              </div>
+              <div class="meta-row">
+                <span class="meta-key">Apple Maps</span>
+                <a class="copy-btn" id="amaps-link" href="#" target="_blank" rel="noopener">Open ↗</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leaflet map -->
+      <div id="admin-map"></div>
+    </div>
+
+    <nav class="admin-nav">
+      <button class="nav-btn" id="prev-btn">← Previous</button>
+      <button class="nav-btn" id="next-btn">Next →</button>
+    </nav>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    (function () {
+      const CONFIG = window.HUNT_CONFIG;
+      let clueIndex = 0;
+      let adminMap = null;
+      let adminMarker = null;
+      let adminCircle = null;
+
+      // ── Gate ──
+      const gateEl = document.getElementById("gate");
+      const panelEl = document.getElementById("admin-panel");
+      const pwInput = document.getElementById("admin-pw");
+      const loginBtn = document.getElementById("admin-login-btn");
+      const gateError = document.getElementById("gate-error");
+
+      function tryLogin() {
+        const val = pwInput.value.trim();
+        if (val === CONFIG.passwords.admin) {
+          gateEl.style.display = "none";
+          panelEl.classList.remove("hidden");
+          initAdminMap();
+          buildDots();
+          renderClue(0);
+        } else {
+          gateError.textContent = "Wrong password — try again.";
+          pwInput.value = "";
+          pwInput.focus();
+        }
+      }
+
+      loginBtn.addEventListener("click", tryLogin);
+      pwInput.addEventListener("keydown", (e) => { if (e.key === "Enter") tryLogin(); });
+
+      document.getElementById("admin-logout-btn").addEventListener("click", () => {
+        panelEl.classList.add("hidden");
+        gateEl.style.display = "";
+        pwInput.value = "";
+        gateError.textContent = "";
+      });
+
+      // ── Map ──
+      function initAdminMap() {
+        adminMap = L.map("admin-map", { zoomControl: true });
+        L.tileLayer(
+          "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+          { attribution: "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ", maxZoom: 19 }
+        ).addTo(adminMap);
+      }
+
+      function updateMap(clue) {
+        if (!adminMap) return;
+        const radius = clue.radius ?? CONFIG.HIT_RADIUS_METERS;
+
+        if (adminMarker) { adminMap.removeLayer(adminMarker); adminMarker = null; }
+        if (adminCircle) { adminMap.removeLayer(adminCircle); adminCircle = null; }
+
+        adminCircle = L.circle([clue.lat, clue.lng], {
+          radius,
+          color: "#f0b429",
+          fillColor: "#f0b429",
+          fillOpacity: 0.15,
+          weight: 2,
+        }).addTo(adminMap);
+
+        const pinEl = document.createElement("div");
+        pinEl.style.cssText = "font-size:1.8rem;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.6))";
+        pinEl.textContent = clue.emoji || "📍";
+        adminMarker = L.marker([clue.lat, clue.lng], {
+          icon: L.divIcon({ className: "", html: pinEl.outerHTML, iconSize: [36, 36], iconAnchor: [18, 18] }),
+        }).bindPopup(`<b>${clue.title}</b><br>${clue.lat.toFixed(5)}, ${clue.lng.toFixed(5)}`).addTo(adminMap);
+
+        adminMap.setView([clue.lat, clue.lng], 15);
+        setTimeout(() => adminMap.invalidateSize(), 60);
+      }
+
+      // ── Clue render ──
+      function renderClue(i) {
+        clueIndex = i;
+        const clue = CONFIG.clues[i];
+        const total = CONFIG.clues.length;
+        const radius = clue.radius ?? CONFIG.HIT_RADIUS_METERS;
+
+        document.getElementById("detail-emoji").textContent = clue.emoji || "📍";
+        document.getElementById("detail-tag").textContent = `Clue ${i + 1} of ${total}`;
+        document.getElementById("detail-title").textContent = clue.title;
+        document.getElementById("detail-clue-text").textContent = clue.clue;
+        document.getElementById("meta-lat").textContent = clue.lat.toFixed(5);
+        document.getElementById("meta-lng").textContent = clue.lng.toFixed(5);
+        document.getElementById("meta-radius").textContent = `${radius}m`;
+        document.getElementById("admin-counter").textContent = `${i + 1} / ${total}`;
+
+        const gmapsUrl = `https://www.google.com/maps?q=${clue.lat},${clue.lng}`;
+        const amapsUrl = `https://maps.apple.com/?ll=${clue.lat},${clue.lng}&q=${encodeURIComponent(clue.title)}`;
+        document.getElementById("gmaps-link").href = gmapsUrl;
+        document.getElementById("amaps-link").href = amapsUrl;
+
+        document.getElementById("prev-btn").disabled = (i === 0);
+        document.getElementById("next-btn").disabled = (i === total - 1);
+
+        // Dots
+        document.querySelectorAll(".clue-dot").forEach((d, idx) => {
+          d.classList.toggle("active", idx === i);
+        });
+
+        updateMap(clue);
+      }
+
+      // ── Dots ──
+      function buildDots() {
+        const container = document.getElementById("clue-dots");
+        container.innerHTML = "";
+        CONFIG.clues.forEach((_, i) => {
+          const dot = document.createElement("button");
+          dot.className = "clue-dot";
+          dot.title = `Clue ${i + 1}`;
+          dot.addEventListener("click", () => renderClue(i));
+          container.appendChild(dot);
+        });
+      }
+
+      // ── Nav ──
+      document.getElementById("prev-btn").addEventListener("click", () => {
+        if (clueIndex > 0) renderClue(clueIndex - 1);
+      });
+
+      document.getElementById("next-btn").addEventListener("click", () => {
+        if (clueIndex < CONFIG.clues.length - 1) renderClue(clueIndex + 1);
+      });
+
+      // ── Copy coords ──
+      document.getElementById("copy-coords-btn").addEventListener("click", () => {
+        const clue = CONFIG.clues[clueIndex];
+        const text = `${clue.lat}, ${clue.lng}`;
+        navigator.clipboard.writeText(text).then(() => {
+          const btn = document.getElementById("copy-coords-btn");
+          btn.textContent = "Copied!";
+          setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
