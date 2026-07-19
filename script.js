@@ -230,6 +230,7 @@
         const dist = Math.round(haversine(latitude, longitude, clue.lat, clue.lng));
         const bearing = bearingTo(latitude, longitude, clue.lat, clue.lng);
         const dir = cardinalDir(bearing);
+        const hitRadius = clue.radius ?? CONFIG.HIT_RADIUS_METERS;
 
         // User dot
         if (userMarker) huntMap.removeLayer(userMarker);
@@ -243,7 +244,7 @@
         if (dirArrow) { huntMap.removeLayer(dirArrow); dirArrow = null; }
         if (dirArrowHead) { huntMap.removeLayer(dirArrowHead); dirArrowHead = null; }
 
-        if (dist > 40) {
+        if (dist > hitRadius) {
           const arrowLen = Math.min(dist * 0.3, 120); // max 120m, never overshoots when close
           const tip = destPoint(latitude, longitude, bearing, arrowLen);
           const accentColor = team === "girls" ? "#b8967e" : "#f0b429";
@@ -264,7 +265,7 @@
         // Hint text
         const dirWords = { N:"north", NE:"northeast", E:"east", SE:"southeast", S:"south", SW:"southwest", W:"west", NW:"northwest" };
         const distLabel = dist < 1000 ? dist + "m" : (dist / 1000).toFixed(1) + "km";
-        $("map-hint-text").textContent = dist <= 40
+        $("map-hint-text").textContent = dist <= hitRadius
           ? "Right on it — check your location now!"
           : `${dirArrowEmoji(dir)} Head ${dirWords[dir]} — ~${distLabel} away`;
 
@@ -459,10 +460,13 @@
 
   function onMiss(dist) {
     const th = CONFIG.themes[team];
+    const radius = CONFIG.clues[clueIndex].radius ?? CONFIG.HIT_RADIUS_METERS;
     let hint;
-    if (dist < 50) hint = th.missNear;
-    else if (dist < 150) hint = th.missWarm;
-    else if (dist < 500) hint = th.missCold;
+    // Tiers are relative to the hit radius so "you're basically on it" always
+    // shows just outside the zone, regardless of how large the radius is.
+    if (dist < radius + 40) hint = th.missNear;
+    else if (dist < radius + 150) hint = th.missWarm;
+    else if (dist < radius + 500) hint = th.missCold;
     else hint = th.missWayOff;
     $("hint-text").textContent = hint;
 

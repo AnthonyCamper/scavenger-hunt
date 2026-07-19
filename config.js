@@ -45,10 +45,15 @@ window.HUNT_CONFIG = {
   //   radius    — (OPTIONAL) override the default hit radius for this clue only
   //   emoji     — (OPTIONAL) emoji icon shown in the clue card header
   //
-  // NOTE ON COORDINATES: These are real Lake Anna landmarks verified from
-  // multiple sources. The Route 208 bridge coords (clue 3) are estimated —
-  // drop a pin directly on the bridge in Google Maps to tighten them up
-  // before the event. All spots are accessible by boat.
+  // NOTE ON COORDINATES: These are real Lake Anna landmarks, verified against
+  // the anna.uslakes.info gazetteer (coords match exactly). All spots are
+  // reachable by boat.
+  //
+  // ISLAND RADII: The island coordinates are the CENTER of each island (dry
+  // land a boat can't reach), so the hit radius must be large enough to fire
+  // from the surrounding water — 90m comfortably covers a boat circling the
+  // shoreline. The bridge (clue 4) sits over water, so a tighter radius is fine.
+  // The four targets are 3–8km apart, so a generous radius can't cross-trigger.
   // --------------------------------------------------------------------------
   clues: [
     {
@@ -60,7 +65,7 @@ window.HUNT_CONFIG = {
       // Source: anna.uslakes.info/POI/Islands/Bones-Island/950725/ — HIGH confidence
       lat: 38.00042,
       lng: -77.73166,
-      radius: 45,
+      radius: 90,
     },
     {
       id: "clue_02",
@@ -71,7 +76,7 @@ window.HUNT_CONFIG = {
       // Source: anna.uslakes.info/POI/Islands/River-Bend-Island/951209/ — HIGH confidence
       lat: 38.03458,
       lng: -77.73749,
-      radius: 45,
+      radius: 90,
     },
     {
       id: "clue_03",
@@ -82,7 +87,7 @@ window.HUNT_CONFIG = {
       // Source: anna.uslakes.info/POI/Islands/Showman-Island/950157/ — HIGH confidence
       lat: 38.03514,
       lng: -77.79972,
-      radius: 45,
+      radius: 90,
     },
     {
       id: "clue_04",
