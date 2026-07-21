@@ -1,0 +1,15 @@
+{
+  "name": "scavenger-hunt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GPS scavenger hunt for a joint bachelor + bachelorette party at Lake Anna.",
+  "scripts": {
+    "test": "node --test test/logic.test.js",
+    "test:e2e": "node --test --test-concurrency=1 test/e2e.test.js",
+    "test:all": "npm run test && npm run test:e2e",
+    "serve": "node -e \"require('./test/server.js').start().then(s=>console.log('Serving on '+s.origin))\""
+  },
+  "devDependencies": {
+    "playwright-core": "^1.49.1"
+  }
+}

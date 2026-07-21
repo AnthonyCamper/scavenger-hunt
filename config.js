@@ -25,9 +25,9 @@ window.HUNT_CONFIG = {
   // PASSWORDS
   // --------------------------------------------------------------------------
   passwords: {
-    guys: "brotherhood2025",   // Team Guys login password
-    girls: "bridestribe2025",  // Team Girls login password
-    admin: "review2025",       // Admin clue-review password (change before sharing)
+    guys: "bach2026",     // Team Guys login password
+    girls: "offir2026",   // Team Girls login password
+    admin: "admin2026",   // Admin clue-review password (admin.html)
   },
 
   // --------------------------------------------------------------------------

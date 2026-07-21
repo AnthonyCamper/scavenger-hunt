@@ -1051,3 +1051,295 @@ html, body {
   .hunt-main { padding-bottom: calc(2rem + env(safe-area-inset-bottom)); }
   .finale-content { padding-bottom: calc(2.5rem + env(safe-area-inset-bottom)); }
 }
+
+/* ============================================================
+   🎯 NEUTRAL THEME — the landing screen, before a team is picked
+   ============================================================ */
+.theme-neutral {
+  --accent: #f0b429;
+  --bg: #0b0b0c;
+  --card-bg: #151517;
+  --card-border: rgba(255, 255, 255, 0.09);
+  --text: #ececec;
+  --text-muted: #8a8a90;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(240, 180, 41, 0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 110%, rgba(184, 150, 126, 0.07) 0%, transparent 55%),
+    #0b0b0c;
+  color: var(--text);
+}
+
+.theme-neutral .ambient-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
+/* ============================================================
+   LANDING SCREEN
+   ============================================================ */
+.landing-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  padding: 2rem 1.4rem calc(1.6rem + env(safe-area-inset-bottom, 0px));
+  margin: auto;
+  text-align: center;
+}
+
+.landing-icon {
+  font-size: 2.6rem;
+  line-height: 1;
+  margin-bottom: 0.9rem;
+  filter: drop-shadow(0 0 18px rgba(240, 180, 41, 0.35));
+}
+
+.landing-title {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  font-size: clamp(1.7rem, 8vw, 2.5rem);
+  color: #fff;
+  line-height: 1.05;
+}
+
+.landing-title::after {
+  content: '';
+  display: block;
+  width: 46px;
+  height: 2px;
+  margin: 0.85rem auto 0;
+  background: linear-gradient(90deg, #f0b429, #b8967e);
+  border-radius: 2px;
+}
+
+.landing-subtitle {
+  margin-top: 0.9rem;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  font-family: 'Lato', system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.team-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+/* Big, unmissable, thumb-friendly targets — this is the first thing a
+   half-celebrating guest taps on a boat. */
+.team-choice {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  width: 100%;
+  min-height: 84px;
+  padding: 1rem 1.1rem;
+  border-radius: 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+  transition: transform 0.12s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.team-choice:active { transform: scale(0.975); }
+
+.team-choice:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+.choice-emoji {
+  font-size: 1.9rem;
+  line-height: 1;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.choice-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.choice-name {
+  font-size: 1.12rem;
+  line-height: 1.2;
+}
+
+.choice-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-family: 'Lato', system-ui, sans-serif;
+  font-weight: 300;
+}
+
+.choice-arrow {
+  font-size: 1.2rem;
+  opacity: 0.45;
+  flex-shrink: 0;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.team-choice:active .choice-arrow { transform: translateX(3px); opacity: 0.9; }
+
+/* Guys card — tactical gold */
+.choice-guys {
+  border-color: rgba(240, 180, 41, 0.3);
+  box-shadow: 0 0 26px rgba(240, 180, 41, 0.07);
+}
+.choice-guys .choice-emoji {
+  background: rgba(240, 180, 41, 0.11);
+  filter: drop-shadow(0 0 8px rgba(240, 180, 41, 0.3));
+}
+.choice-guys .choice-name {
+  font-family: 'Barlow', sans-serif;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #f0b429;
+}
+.choice-guys .choice-sub {
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+}
+.choice-guys .choice-arrow { color: #f0b429; }
+
+/* Girls card — soft, classic. Border is deliberately a touch stronger than the
+   gold card's: the blush reads fainter against black at the same alpha. */
+.choice-girls {
+  border-color: rgba(216, 186, 164, 0.5);
+  box-shadow: 0 0 26px rgba(184, 150, 126, 0.1);
+  background: linear-gradient(180deg, rgba(232, 212, 200, 0.045), transparent 70%), var(--card-bg);
+}
+.choice-girls .choice-emoji {
+  background: rgba(232, 212, 200, 0.13);
+  color: #e8d4c8;
+  filter: drop-shadow(0 0 8px rgba(232, 212, 200, 0.3));
+}
+.choice-girls .choice-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: 0.01em;
+  color: #e8d4c8;
+}
+.choice-girls .choice-sub { letter-spacing: 0.04em; }
+.choice-girls .choice-arrow { color: #d4b09a; }
+
+.landing-foot {
+  margin-top: 1.7rem;
+  font-size: 0.76rem;
+  color: #6a6a72;
+  font-family: 'Lato', system-ui, sans-serif;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   BACK BUTTON (login screen)
+   ============================================================ */
+.back-btn {
+  position: absolute;
+  top: 0.85rem;
+  left: 0.85rem;
+  padding: 0.5rem 0.7rem;
+  min-height: 40px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: color 0.2s ease;
+  z-index: 2;
+}
+
+.back-btn:active { color: var(--text); }
+.back-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+.theme-guys .back-btn { font-family: 'Share Tech Mono', monospace; letter-spacing: 0.06em; }
+.theme-girls .back-btn { font-family: 'Lato', system-ui, sans-serif; }
+
+/* Give the card room so the back button never collides with the icon */
+.login-card { padding-top: 3rem; }
+
+/* ============================================================
+   MOTION PREFERENCES
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .petal { display: none; }
+}
+
+/* ============================================================
+   SHORT SCREENS (iPhone SE and similar) — keep everything reachable
+   ============================================================ */
+@media (max-height: 700px) {
+  .landing-card { padding-top: 1.2rem; }
+  .landing-icon { font-size: 2.1rem; margin-bottom: 0.6rem; }
+  .team-choices { margin-top: 1.4rem; gap: 0.7rem; }
+  .team-choice { min-height: 74px; }
+  .landing-foot { margin-top: 1.1rem; }
+}
+
+/* ============================================================
+   "SEE IT ON THE MAP" — secondary action on the hit overlay
+   ============================================================ */
+.hit-map-link {
+  display: block;
+  margin: 0.9rem auto 0;
+  padding: 0.65rem 1rem;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: color 0.2s ease;
+}
+
+.hit-map-link:active { color: var(--accent); }
+.hit-map-link:focus-visible { outline: 2px solid currentColor; outline-offset: 2px; }
+
+.theme-guys .hit-map-link {
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+.theme-girls .hit-map-link {
+  font-family: 'Lato', system-ui, sans-serif;
+  font-weight: 300;
+}

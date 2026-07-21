@@ -2,60 +2,94 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#1a1a1a" id="meta-theme-color" />
+  <!-- viewport-fit=cover: lets the layout reach under the notch/home indicator.
+       Zoom is intentionally left enabled for accessibility; accidental
+       double-tap zoom is suppressed via touch-action in CSS instead. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e0e0e" id="meta-theme-color" />
+  <meta name="description" content="A GPS scavenger hunt around Lake Anna." />
 
-  <!-- iOS "Add to Home Screen" — makes it launch full-screen like a native app -->
+  <!-- iOS "Add to Home Screen" — launches full-screen like a native app -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="The Hunt" />
+  <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%231a1a1a'/%3E%3Ctext x='90' y='128' font-size='104' text-anchor='middle'%3E%F0%9F%8E%AF%3C/text%3E%3C/svg%3E" />
 
   <title>The Hunt Is On 🎯</title>
 
-  <!-- Google Fonts — both themes, loaded together -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@700;900&family=Playfair+Display:ital,wght@0,700;1,400&family=Lato:wght@300;400&display=swap" rel="stylesheet" />
-
-  <!-- canvas-confetti CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
-
-  <!-- Leaflet map -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
+  <!-- All assets are local: the app must fully load with no signal at the lake. -->
+  <link rel="stylesheet" href="vendor/fonts.css" />
+  <link rel="stylesheet" href="vendor/leaflet.css" />
   <link rel="stylesheet" href="style.css" />
+  <script defer src="vendor/confetti.min.js"></script>
+  <script defer src="vendor/leaflet.js"></script>
 </head>
-<body class="theme-guys" id="app-body">
+<body class="theme-neutral" id="app-body">
+
+  <!-- ============================== LANDING SCREEN ============================== -->
+  <div id="screen-landing" class="screen active">
+    <div class="ambient-bg" id="ambient-bg-landing"></div>
+
+    <div class="landing-card">
+      <div class="landing-icon">🎯</div>
+      <h1 class="landing-title">THE HUNT IS ON</h1>
+      <p class="landing-subtitle">Two teams. Four stops. One lake.<br />Pick your side to begin.</p>
+
+      <div class="team-choices">
+        <button type="button" class="team-choice choice-guys" id="choose-guys" data-team="guys">
+          <span class="choice-emoji">🎯</span>
+          <span class="choice-text">
+            <span class="choice-name">Team Guys</span>
+            <span class="choice-sub">The bachelor crew</span>
+          </span>
+          <span class="choice-arrow">→</span>
+        </button>
+
+        <button type="button" class="team-choice choice-girls" id="choose-girls" data-team="girls">
+          <span class="choice-emoji">✦</span>
+          <span class="choice-text">
+            <span class="choice-name">Team Girls</span>
+            <span class="choice-sub">The bachelorette crew</span>
+          </span>
+          <span class="choice-arrow">→</span>
+        </button>
+      </div>
+
+      <p class="landing-foot">Tap your team, then enter the code you were given.</p>
+    </div>
+  </div>
 
   <!-- ============================== LOGIN SCREEN ============================== -->
-  <div id="screen-login" class="screen active">
+  <div id="screen-login" class="screen">
     <div class="login-bg-overlay"></div>
-
-    <!-- Guys: grid lines / Girls: floating petals -->
     <div class="ambient-bg" id="ambient-bg"></div>
 
     <div class="login-card">
+      <button type="button" class="back-btn" id="login-back-btn" aria-label="Back to team selection">← Back</button>
+
       <div class="login-icon" id="login-icon">🎯</div>
       <h1 class="login-title" id="login-title">THE HUNT IS ON</h1>
       <p class="login-subtitle" id="login-subtitle">Enter your team's code to begin.</p>
 
       <form id="login-form" autocomplete="off">
-        <label class="input-label" id="login-label">ENTER ACCESS CODE</label>
+        <label class="input-label" id="login-label" for="password-input">ENTER ACCESS CODE</label>
         <div class="input-wrap">
           <input
             type="password"
             id="password-input"
             class="password-input"
             placeholder="Access code..."
-            autocomplete="new-password"
+            autocomplete="off"
+            autocapitalize="none"
+            autocorrect="off"
             spellcheck="false"
+            enterkeyhint="go"
           />
           <button type="button" id="toggle-pw" class="toggle-pw" aria-label="Show password">👁</button>
         </div>
-        <p class="error-msg" id="error-msg"></p>
+        <p class="error-msg" id="error-msg" role="alert" aria-live="polite"></p>
         <button type="submit" id="login-btn" class="btn btn-primary">INITIATE MISSION</button>
       </form>
     </div>
@@ -69,7 +103,7 @@
       <div class="team-badge" id="team-badge">TEAM GUYS</div>
       <div class="progress-wrap">
         <span class="progress-label" id="progress-label">OBJECTIVE</span>
-        <span class="progress-count" id="progress-count">1 / 8</span>
+        <span class="progress-count" id="progress-count">1 / 4</span>
       </div>
     </header>
 
@@ -80,32 +114,31 @@
     <main class="hunt-main">
       <div class="clue-card" id="clue-card">
         <div class="clue-card-header">
-          <span class="clue-emoji" id="clue-emoji">🥂</span>
+          <span class="clue-emoji" id="clue-emoji">🎯</span>
           <div>
             <span class="clue-sublabel" id="clue-label">BRIEFING</span>
-            <h2 class="clue-title" id="clue-title">Where It All Began</h2>
+            <h2 class="clue-title" id="clue-title">Loading…</h2>
           </div>
         </div>
         <p class="clue-text" id="clue-text">Clue text loads here.</p>
       </div>
 
-      <!-- Location check area -->
       <div class="check-area" id="check-area">
         <button class="btn btn-check" id="check-btn">CHECK LOCATION</button>
         <button class="btn btn-map-toggle" id="map-btn">View Map</button>
-        <p class="hint-text" id="hint-text"></p>
+        <p class="hint-text" id="hint-text" aria-live="polite"></p>
       </div>
 
-      <!-- Hit overlay (shown on success) -->
       <div class="hit-overlay hidden" id="hit-overlay">
         <div class="hit-icon" id="hit-icon">🎯</div>
         <h2 class="hit-title" id="hit-title">TARGET ACQUIRED</h2>
         <p class="hit-subtitle" id="hit-subtitle">Location confirmed.</p>
         <button class="btn btn-next" id="next-btn">NEXT OBJECTIVE →</button>
+        <button type="button" class="hit-map-link" id="hit-map-btn">See it on the map</button>
       </div>
     </main>
 
-    <!-- Hidden reset (tap progress count 5x) -->
+    <!-- Hidden organiser reset (tap bottom-right corner 5x) -->
     <div class="reset-tap-zone" id="reset-tap-zone" title="Secret reset"></div>
 
     <!-- Full-screen map overlay -->
@@ -135,6 +168,7 @@
     </div>
   </div>
 
+  <script src="logic.js"></script>
   <script src="config.js"></script>
   <script src="script.js"></script>
 </body>
